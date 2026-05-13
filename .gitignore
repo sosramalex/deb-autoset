@@ -6,3 +6,7 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Local tooling used by Codex
+.tools/
+gh_*.zip
