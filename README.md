@@ -17,6 +17,15 @@ asosar ALL=(ALL:ALL) ALL
 
 The script writes this rule to `/etc/sudoers.d/asosar` and validates it with `visudo` instead of editing `/etc/sudoers` directly.
 
+It also configures NetworkManager so Cockpit can manage ifupdown interfaces by setting this in `/etc/NetworkManager/NetworkManager.conf`:
+
+```ini
+[ifupdown]
+managed=true
+```
+
+The original NetworkManager config is backed up to `/etc/NetworkManager/NetworkManager.conf.bak` before editing.
+
 ## Usage
 
 On a fresh Debian system, run as `root`:
@@ -38,11 +47,9 @@ bash debian-bootstrap.sh your_username
 After this project is pushed to GitHub, you can run it on Debian like this:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/YOUR_GITHUB_USERNAME/YOUR_REPO_NAME/main/debian-bootstrap.sh -o debian-bootstrap.sh
+curl -fsSL https://raw.githubusercontent.com/asosar2195/debian-bootstrap-installer/main/debian-bootstrap.sh -o debian-bootstrap.sh
 bash debian-bootstrap.sh
 ```
-
-Replace `YOUR_GITHUB_USERNAME` and `YOUR_REPO_NAME` with your actual GitHub account and repository name.
 
 ## Publish With GitHub Desktop
 
