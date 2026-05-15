@@ -8,7 +8,7 @@
 
 # asosar-deb-auto
 
-Debian setup script that auto-detects the first non-root user and configures sudo, Cockpit, cockpit-files, and SSH.
+Debian setup script that auto-detects the first non-root user and configures sudo, Curl, Cockpit, cockpit-files, and SSH.
 
 ## What It Installs
 
