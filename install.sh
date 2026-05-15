@@ -8,16 +8,30 @@ show_banner() {
   echo " / ___ \ ___) | |_| |___) / ___ \|  _ <_____| |_| | |___| |_) |_____/ ___ \ |_| | | || |_| |"
   echo "/_/   \_\____/ \___/|____/_/   \_\_| \_\    |____/|_____|____/     /_/   \_\___/  |_| \___/ "
   echo ""
-  echo "             Debian Auto-Installer — Sudo, Tools & Cockpit"
+  echo "         Debian Auto-Installer — Sudo, Cockpit, SSH & Tools"
   echo ""
 }
 
 show_banner
 
-SUDO_USER_NAME="${1:-asosar}"
+detect_nonroot_user() {
+  getent passwd | awk -F: '$3 >= 1000 && $3 < 65534 { print $1; exit }'
+}
+
+if [[ $# -ge 1 ]]; then
+  SUDO_USER_NAME="$1"
+else
+  SUDO_USER_NAME=$(detect_nonroot_user) || true
+  if [[ -z "$SUDO_USER_NAME" ]]; then
+    echo "No non-root user detected. Please provide a username:"
+    echo "  bash $0 <username>"
+    exit 1
+  fi
+fi
+
 SUDOERS_FILE="/etc/sudoers.d/${SUDO_USER_NAME}"
 NETWORKMANAGER_CONF="/etc/NetworkManager/NetworkManager.conf"
-PACKAGES=(sudo net-tools curl cockpit)
+PACKAGES=(sudo net-tools curl cockpit cockpit-files)
 
 configure_networkmanager_ifupdown() {
   if [[ ! -f "${NETWORKMANAGER_CONF}" ]]; then
@@ -106,6 +120,13 @@ if command -v systemctl >/dev/null 2>&1; then
   echo "Enabling Cockpit socket..."
   systemctl enable --now cockpit.socket
 
+  echo "Checking SSH server..."
+  if ! dpkg -l openssh-server >/dev/null 2>&1; then
+    echo "Installing openssh-server..."
+    DEBIAN_FRONTEND=noninteractive apt-get install -y openssh-server
+  fi
+  systemctl enable --now ssh
+
   echo "Configuring NetworkManager to manage ifupdown interfaces..."
   configure_networkmanager_ifupdown
 
@@ -121,5 +142,6 @@ fi
 
 echo "Done."
 echo "Installed: ${PACKAGES[*]}"
+echo "SSH server: enabled"
 echo "Sudo access configured for: ${SUDO_USER_NAME}"
 echo "NetworkManager ifupdown managed=true configured when available."
