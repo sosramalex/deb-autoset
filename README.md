@@ -55,6 +55,6 @@ bash install.sh your_username
 ## Download And Run From GitHub
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/asosar2195/asosar-deb-auto/main/install.sh -o install.sh
+curl -fsSL https://raw.githubusercontent.com/alsosar/asosar-deb-auto/main/install.sh -o install.sh
 bash install.sh
 ```
