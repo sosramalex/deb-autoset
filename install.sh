@@ -31,7 +31,7 @@ fi
 
 SUDOERS_FILE="/etc/sudoers.d/${SUDO_USER_NAME}"
 NETWORKMANAGER_CONF="/etc/NetworkManager/NetworkManager.conf"
-PACKAGES=(sudo net-tools curl cockpit cockpit-files)
+PACKAGES=(sudo net-tools curl cockpit)
 
 configure_networkmanager_ifupdown() {
   if [[ ! -f "${NETWORKMANAGER_CONF}" ]]; then

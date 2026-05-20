@@ -9,7 +9,7 @@
 
 # alsosar-deb-auto
 
-Debian setup script that auto-detects the first non-root user and configures sudo, Curl, Cockpit, cockpit-files, and SSH.
+Debian setup script that auto-detects the first non-root user and configures sudo, Curl, Cockpit, and SSH.
 
 ## What It Installs
 
@@ -17,7 +17,6 @@ Debian setup script that auto-detects the first non-root user and configures sud
 - `net-tools`
 - `curl`
 - `cockpit`
-- `cockpit-files`
 - `openssh-server` (if not already present)
 
 It also creates a sudoers rule for the detected user (or the one passed as an argument):
