@@ -7,7 +7,7 @@
 ╚═════╝░╚══════╝╚═════╝░░░░░░░╚═╝░░╚═╝░╚═════╝░░░░╚═╝░░░░╚════╝░
 ```
 
-# alsosar-deb-auto
+# alsosram-deb-auto
 
 Debian setup script that auto-detects the first non-root user and configures sudo, Curl, Cockpit, and SSH.
 
