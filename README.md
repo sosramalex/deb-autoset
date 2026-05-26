@@ -34,9 +34,11 @@ It optionally sets `managed=true` in `/etc/NetworkManager/NetworkManager.conf` (
 
 Instead of Cockpit, the script installs a lightweight mechanism to show the server's IP address at the login prompt:
 
-- **`/usr/local/bin/generate-issue.sh`** — detects the default route interface and IP, writes `/etc/issue`
+- **`/usr/local/bin/generate-issue.sh`** — detects all non-loopback IPv4 addresses and their interfaces, writes `/etc/issue`
 - **`generate-issue.service`** — a systemd oneshot unit that runs after the network is online at boot
 - **`/etc/NetworkManager/dispatcher.d/99-update-issue`** — a NetworkManager dispatcher that re-generates `/etc/issue` whenever a connection comes up, keeping the login prompt current
+
+**OpenMediaVault note:** If OMV is detected (`/etc/openmediavault/config.xml`), the IP banner setup is skipped entirely, as OVM manages its own login banner.
 
 ## Usage
 

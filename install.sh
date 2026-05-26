@@ -100,6 +100,12 @@ if ! id "${SUDO_USER_NAME}" >/dev/null 2>&1; then
   exit 1
 fi
 
+OMV=false
+if [[ -f /etc/openmediavault/config.xml ]]; then
+  OMV=true
+  echo "OpenMediaVault detected — skipping IP login banner (OMV manages its own)."
+fi
+
 echo "Updating package lists..."
 apt-get update
 
@@ -135,8 +141,9 @@ if command -v systemctl >/dev/null 2>&1; then
   fi
 fi
 
-echo "Setting up IP address in login banner..."
-cat > /usr/local/bin/generate-issue.sh <<'SCRIPT'
+if [[ "$OMV" == false ]]; then
+  echo "Setting up IP address in login banner..."
+  cat > /usr/local/bin/generate-issue.sh <<'SCRIPT'
 #!/usr/bin/env bash
 set -euo pipefail
 
@@ -162,9 +169,9 @@ fi
   echo ""
 } > /etc/issue
 SCRIPT
-chmod +x /usr/local/bin/generate-issue.sh
+  chmod +x /usr/local/bin/generate-issue.sh
 
-cat > /etc/systemd/system/generate-issue.service <<'UNIT'
+  cat > /etc/systemd/system/generate-issue.service <<'UNIT'
 [Unit]
 Description=Generate /etc/issue with primary IP
 After=network-online.target
@@ -179,18 +186,19 @@ RemainAfterExit=yes
 WantedBy=multi-user.target
 UNIT
 
-systemctl daemon-reload
-systemctl enable generate-issue.service
-/usr/local/bin/generate-issue.sh
+  systemctl daemon-reload
+  systemctl enable generate-issue.service
+  /usr/local/bin/generate-issue.sh
 
-if systemctl cat NetworkManager.service >/dev/null 2>&1; then
-  cat > /etc/NetworkManager/dispatcher.d/99-update-issue <<'DISP'
+  if systemctl cat NetworkManager.service >/dev/null 2>&1; then
+    cat > /etc/NetworkManager/dispatcher.d/99-update-issue <<'DISP'
 #!/usr/bin/env bash
 if [[ "$2" =~ ^(up|vpn-up)$ ]]; then
   /usr/local/bin/generate-issue.sh
 fi
 DISP
-  chmod +x /etc/NetworkManager/dispatcher.d/99-update-issue
+    chmod +x /etc/NetworkManager/dispatcher.d/99-update-issue
+  fi
 fi
 
 echo "Done."
@@ -198,4 +206,8 @@ echo "Installed: ${PACKAGES[*]}"
 echo "SSH server: enabled"
 echo "Sudo access configured for: ${SUDO_USER_NAME}"
 echo "NetworkManager ifupdown managed=true configured when available."
-echo "Login banner IP capture installed."
+if [[ "$OMV" == false ]]; then
+  echo "Login banner IP capture installed."
+else
+  echo "Login banner IP capture skipped (OpenMediaVault)."
+fi
