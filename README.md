@@ -38,7 +38,7 @@ Instead of Cockpit, the script installs a lightweight mechanism to show the serv
 - **`generate-issue.service`** — a systemd oneshot unit that runs after the network is online at boot
 - **`/etc/NetworkManager/dispatcher.d/99-update-issue`** — a NetworkManager dispatcher that re-generates `/etc/issue` whenever a connection comes up, keeping the login prompt current
 
-**OpenMediaVault note:** If OMV is detected (`/etc/openmediavault/config.xml`), the IP banner setup is skipped entirely, as OVM manages its own login banner.
+**OpenMediaVault note:** The script prompts whether this is an OMV system (via whiptail, or text fallback). If confirmed, the IP banner setup is skipped since OMV manages its own login banner. Auto-detection via `/etc/openmediavault/config.xml` is used if whiptail is unavailable and stdin is non-interactive.
 
 ## Usage
 

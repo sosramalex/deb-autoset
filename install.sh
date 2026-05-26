@@ -31,7 +31,7 @@ fi
 
 SUDOERS_FILE="/etc/sudoers.d/${SUDO_USER_NAME}"
 NETWORKMANAGER_CONF="/etc/NetworkManager/NetworkManager.conf"
-PACKAGES=(sudo net-tools curl)
+PACKAGES=(sudo net-tools curl whiptail)
 
 configure_networkmanager_ifupdown() {
   if [[ ! -f "${NETWORKMANAGER_CONF}" ]]; then
@@ -101,9 +101,20 @@ if ! id "${SUDO_USER_NAME}" >/dev/null 2>&1; then
 fi
 
 OMV=false
-if [[ -f /etc/openmediavault/config.xml ]]; then
+if command -v whiptail >/dev/null 2>&1; then
+  if whiptail --yesno "Is this an OpenMediaVault system?" 8 50; then
+    OMV=true
+    echo "OpenMediaVault selected — skipping IP login banner."
+  fi
+elif [[ -f /etc/openmediavault/config.xml ]]; then
   OMV=true
-  echo "OpenMediaVault detected — skipping IP login banner (OMV manages its own)."
+  echo "OpenMediaVault detected — skipping IP login banner."
+else
+  read -rp "Is this OpenMediaVault? (y/N): " ans
+  if [[ "$ans" =~ ^[Yy] ]]; then
+    OMV=true
+    echo "OpenMediaVault selected — skipping IP login banner."
+  fi
 fi
 
 echo "Updating package lists..."
