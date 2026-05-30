@@ -7,7 +7,7 @@
 ╚═════╝░╚══════╝╚═════╝░░░░░░░╚═╝░░╚═╝░╚═════╝░░░░╚═╝░░░░╚════╝░
 ```
 
-# alsosram-deb-autoset
+# sosramalex-deb-autoset
 
 Debian setup script that auto-detects the first non-root user and configures sudo, curl, SSH, dynamically displays the IP address at the login prompt, and optionally enables NetworkManager ifupdown management.
 
@@ -59,6 +59,6 @@ bash install.sh your_username
 ## Download And Run From GitHub
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/alsosram/deb-autoset/main/install.sh -o install.sh
+curl -fsSL https://raw.githubusercontent.com/sosramalex/deb-autoset/main/install.sh -o install.sh
 bash install.sh
 ```
